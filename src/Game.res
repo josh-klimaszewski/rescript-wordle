@@ -1,63 +1,79 @@
 type node = (int, int)
+
 type cell =
-  | Inactive({node: node})
-  | Guessed({node: node, value: string})
-  | PartialCorrect({node: node, value: string})
-  | Correct({node: node, value: string})
+  | Inactive
+  | Guessed(string)
+  | PartialCorrect(string)
+  | Correct(string)
+  | Incorrect(string)
+
 type row = array<cell>
+
 type grid = array<row>
+type gameState = Playing | Won | Lost
+
 type state = {
   grid: grid,
+  currentNode: node,
   solution: string,
-  completed: bool,
+  gameState: gameState,
+  incorrectGuesses: array<string>,
 }
-type action = Guess({node: node, value: string}) | Solve({node: node}) | Invalid
+type action = Guess(string) | Back | Solve | Invalid
 
-let isRowToSolve = (row, state, index) => state.grid->Js.Array2.findIndex(r => r == row) == index
-
-let shouldSolve = (state, index) => {
-  index == state.solution->Js.String2.length - 1
-}
-
-let findNewCellFromGuess = (cell, incomingRow, incomingColumn, value) => {
-  switch cell {
-  | Inactive({node: (x, y)}) when x === incomingRow && y === incomingColumn =>
-    Guessed({node: (x, y), value: value})
-  | _ => cell
+let nextNode = state => {
+  let (x, y) = state.currentNode
+  let wordLength = state.solution->Js.String2.length
+  let guessLength = state.grid->Js.Array2.length
+  switch (x, y) {
+  | (x, y) if y + 1 !== wordLength => (x, y + 1)
+  | (x, y) if y + 1 === wordLength && x + 1 !== guessLength => (x + 1, 0)
+  | _ => (0, 0)
   }
 }
 
-let findNewStateFromGuess = (state, node, value) => {
-  let (incomingRow, incomingColumn) = node
-  let newState = {
-    ...state,
-    grid: state.grid->Js.Array2.map(row => {
-      row->Js.Array2.map(cell => cell->findNewCellFromGuess(incomingRow, incomingColumn, value))
-    }),
-  }
-  newState
-}
-
-let findNewCellFromSolution = (cell, state) => {
-  switch cell {
-  | Guessed({node: (x, y), value}) =>
-    switch value {
-    | v when state.solution->Js.String2.charAt(y) == v => Correct({node: (x, y), value: value})
-    | v when state.solution->Js.String2.includes(v) => PartialCorrect({node: (x, y), value: value})
-    | _ => cell
-    }
-  | _ => cell
+let lastNode = state => {
+  let (x, y) = state.currentNode
+  switch x {
+  | x if x === 0 => (0, y)
+  | _ => (x - 1, y)
   }
 }
 
-let findNewGridForSolution = (state, index) =>
-  state.grid->Js.Array2.map(row => {
-    switch row {
-    | row when row->isRowToSolve(state, index) =>
-      row->Js.Array2.map(cell => cell->findNewCellFromSolution(state))
-    | _ => row
-    }
+let insertValueIntoGrid = (state, value) => {
+  let (x, y) = state.currentNode
+  state.grid->Js.Array2.mapi((row, i) => {
+    i !== x
+      ? row
+      : row->Js.Array2.mapi((cell, i) => {
+          i !== y
+            ? cell
+            : switch value {
+              | Some(value) => Guessed(value)
+              | None => Inactive
+              }
+        })
   })
+}
+
+let solveGrid = state => {
+  let (x, _) = state.currentNode
+  state.grid->Js.Array2.mapi((row, i) => {
+    i !== x
+      ? row
+      : row->Js.Array2.mapi((cell, i) => {
+          switch cell {
+          | Guessed(value) =>
+            switch value {
+            | v if state.solution->Js.String2.charAt(i) == v => Correct(value)
+            | v if state.solution->Js.String2.includes(v) => PartialCorrect(value)
+            | _ => Incorrect(value)
+            }
+          | _ => cell
+          }
+        })
+  })
+}
 
 let completed = grid =>
   switch grid->Js.Array2.find(row =>
@@ -72,23 +88,43 @@ let completed = grid =>
   | _ => false
   }
 
-let rec reducer = (action, state) => {
-  switch action {
-  | Guess({node, value}) => {
-      let newState = state->findNewStateFromGuess(node, value)
-      switch node {
-      | (_, col) when state->shouldSolve(col) =>
-        reducer(Solve({node: node}), newState)
-      | _ => newState
+let isLastGuess = state => state->nextNode === (0, 0)
+
+let findIncorrect = (state, grid) => {
+  let incorrect = ref(state.incorrectGuesses)
+  grid->Js.Array2.forEach(row => {
+    row->Js.Array2.forEach(cell => {
+      switch cell {
+      | Incorrect(v) if incorrect.contents->Js.Array2.includes(v) => ()
+      | Incorrect(v) => incorrect := incorrect.contents->Js.Array2.concat([v])
+      | _ => ()
       }
+    })
+  })
+  incorrect.contents
+}
+
+let reducer = (state, action) => {
+  switch action {
+  | Guess(value) => {
+      ...state,
+      currentNode: state->nextNode,
+      grid: state->insertValueIntoGrid(Some(value)),
     }
-  | Solve({node: (incomingRow, _incomingColumn)}) => {
-      let newGrid = state->findNewGridForSolution(incomingRow)
-      let completed = newGrid->completed
+  | Back => {
+      ...state,
+      currentNode: state->lastNode,
+      grid: state->insertValueIntoGrid(None),
+    }
+  | Solve => {
+      let nextGrid = state->solveGrid
+      let completed = nextGrid->completed
       {
         ...state,
-        grid: newGrid,
-        completed: completed,
+        currentNode: state->nextNode,
+        grid: nextGrid,
+        gameState: completed ? Won : state->isLastGuess ? Lost : Playing,
+        incorrectGuesses: state->findIncorrect(nextGrid),
       }
     }
   | Invalid => state
