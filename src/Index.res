@@ -1,12 +1,9 @@
-open ReactDomExperimental
-
 %%raw(`import './Index.css';`)
 
-switch createRootWithId("root") {
-| Some(root) => root->render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  )
+let fallback = <div> {React.string("...")} </div>
+let app = <React.Suspense fallback> <App key="app" /> </React.Suspense>
+
+switch ReactDOM.querySelector("#root") {
+| Some(root) => ReactDOM.render(app, root)
 | None => ()
 }
