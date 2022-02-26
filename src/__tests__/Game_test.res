@@ -1,5 +1,6 @@
 open Jest
 open Expect
+open Game
 
 let initial: Game.state = {
   grid: [

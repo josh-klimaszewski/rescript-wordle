@@ -130,3 +130,36 @@ let reducer = (state, action) => {
   | Invalid => state
   }
 }
+
+let getInitial = solution => {
+  grid: [
+    [Inactive, Inactive, Inactive, Inactive, Inactive],
+    [Inactive, Inactive, Inactive, Inactive, Inactive],
+    [Inactive, Inactive, Inactive, Inactive, Inactive],
+    [Inactive, Inactive, Inactive, Inactive, Inactive],
+    [Inactive, Inactive, Inactive, Inactive, Inactive],
+  ],
+  currentNode: (0, 0),
+  solution: solution,
+  gameState: Playing,
+  incorrectGuesses: [],
+}
+
+let words = ["hello", "ouphe", "chase"]
+
+module GameContext = {
+  include Context.Make({
+    type context = (state, action => unit)
+    let defaultValue = (getInitial(""), _ => ())
+  })
+}
+
+module Provider = {
+  @react.component
+  let make = (~children) => {
+    let initial = words[Js.Math.random_int(0, words->Js.Array2.length)]
+    let (state, dispatch) = React.useReducer(reducer, getInitial(initial))
+
+    <GameContext.Provider value=(state, dispatch)> children </GameContext.Provider>
+  }
+}
