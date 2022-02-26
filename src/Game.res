@@ -16,82 +16,84 @@ type state = {
 
 type action = Guess({node: node, value: string}) | Solve({node: node}) | Invalid
 
-let reducer = (action: action, state: state) => {
+let isRowToSolve = (row, state, index) => state.grid->Js.Array2.findIndex(r => r == row) == index
+
+let shouldSolve = (state, index) => {
+  index == state.solution->Js.String2.length - 1
+}
+
+let findNewCellFromGuess = (cell, incomingRow, incomingColumn, value) => {
+  switch cell {
+  | Inactive({node: (x, y)}) when x === incomingRow && y === incomingColumn =>
+    Guessed({node: (x, y), value: value})
+  | _ => cell
+  }
+}
+
+let findNewStateFromGuess = (state, node, value) => {
+  let (incomingRow, incomingColumn) = node
+  let newState = {
+    ...state,
+    grid: state.grid->Js.Array2.map(row => {
+      row->Js.Array2.map(cell => cell->findNewCellFromGuess(incomingRow, incomingColumn, value))
+    }),
+  }
+  newState
+}
+
+let findNewCellFromSolution = (cell, state) => {
+  switch cell {
+  | Guessed({node: (x, y), value}) =>
+    switch value {
+    | v when state.solution->Js.String2.charAt(y) == v => Correct({node: (x, y), value: value})
+    | v when state.solution->Js.String2.includes(v) => PartialCorrect({node: (x, y), value: value})
+    | _ => cell
+    }
+  | _ => cell
+  }
+}
+
+let findNewGridForSolution = (state, index) =>
+  state.grid->Js.Array2.map(row => {
+    switch row {
+    | row when row->isRowToSolve(state, index) =>
+      row->Js.Array2.map(cell => cell->findNewCellFromSolution(state))
+    | _ => row
+    }
+  })
+
+let completed = grid =>
+  switch grid->Js.Array2.find(row =>
+    row->Js.Array2.every(cell =>
+      switch cell {
+      | Correct(_) => true
+      | _ => false
+      }
+    )
+  ) {
+  | Some(_) => true
+  | _ => false
+  }
+
+let rec reducer = (action, state) => {
   switch action {
-  | Guess({node: (incomingRow, incomingColumn), value}) => {
-      ...state,
-      grid: state.grid->Js.Array2.map(row => {
-        row->Js.Array2.map(cell => {
-          switch cell {
-          | Inactive({node: (x, y)}) when x === incomingRow && y === incomingColumn =>
-            Guessed({node: (x, y), value: value})
-          | _ => cell
-          }
-        })
-      }),
+  | Guess({node, value}) => {
+      let newState = state->findNewStateFromGuess(node, value)
+      switch node {
+      | (_, col) when state->shouldSolve(col) =>
+        reducer(Solve({node: node}), newState)
+      | _ => newState
+      }
     }
   | Solve({node: (incomingRow, _incomingColumn)}) => {
-      ...state,
-      grid: state.grid->Js.Array2.map(row => {
-        switch row {
-        | row when state.grid->Js.Array2.findIndex(r => r == row) == incomingRow => []
-        // let guess = row->Js.Array2.reduce((acc, cur) => acc :+= cur)
-
-        | _ => row
-        }
-        // switch state.grid->Js.Array2.findIndex(row => row === incomingRow) {
-        // | Some(x) when x === incomingRow => row
-        // | _ => row
-        // }
-      }),
+      let newGrid = state->findNewGridForSolution(incomingRow)
+      let completed = newGrid->completed
+      {
+        ...state,
+        grid: newGrid,
+        completed: completed,
+      }
     }
   | Invalid => state
   }
 }
-
-// let word_length = 5
-// let guess_length = 5
-
-// type cell =
-//   | Inactive
-//   | Active(string)
-//   | Partial(string)
-//   | Correct(string)
-
-// type grid = array<array<cell>>
-
-// type node = (int, int)
-
-// let getCell = (grid: grid, (x, y): node) => grid[x][y]
-// let getNextCell = (grid: grid, (x, y): node) => {
-//   switch y === word_length - 1 {
-//   | false => grid[x][y + 1]
-//   | true => switch x === guess_length - 1 {
-//     | false => grid[x + 1][0]
-//     | true => grid[0][0]
-//     }
-//   }
-// }
-
-// type state = {
-//   grid: grid,
-//   activeCell: node,
-// }
-
-// type action = Invalid | Input(string) | Solve
-
-// let reducer = (state, action) => {
-//   switch action {
-//   | Input(string) => {
-//       let cell = state.grid->getCell
-//       {
-//         ...state,
-//         grid: state.grid->Js.Array2.map(row => {
-//           row
-//         }),
-//       }
-//     }
-//   | Invalid
-//   | _ => state
-//   }
-// }
