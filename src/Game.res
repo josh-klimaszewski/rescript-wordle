@@ -157,8 +157,10 @@ module GameContext = {
 module Provider = {
   @react.component
   let make = (~children) => {
-    let initial = words[Js.Math.random_int(0, words->Js.Array2.length)]
-    let (state, dispatch) = React.useReducer(reducer, getInitial(initial))
+    let (state, dispatch) = React.useReducer(
+      reducer,
+      words[0->Js.Math.random_int(words->Js.Array2.length)]->getInitial,
+    )
 
     <GameContext.Provider value=(state, dispatch)> children </GameContext.Provider>
   }
