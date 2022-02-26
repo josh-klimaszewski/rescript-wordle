@@ -1,19 +1,16 @@
 type node = (int, int)
-
 type cell =
   | Inactive({node: node})
   | Guessed({node: node, value: string})
   | PartialCorrect({node: node, value: string})
   | Correct({node: node, value: string})
-
-type grid = array<array<cell>>
-
+type row = array<cell>
+type grid = array<row>
 type state = {
   grid: grid,
   solution: string,
   completed: bool,
 }
-
 type action = Guess({node: node, value: string}) | Solve({node: node}) | Invalid
 
 let isRowToSolve = (row, state, index) => state.grid->Js.Array2.findIndex(r => r == row) == index
