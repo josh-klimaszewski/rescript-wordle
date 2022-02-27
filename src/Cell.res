@@ -20,6 +20,7 @@ let make = (~node: Game.node) => {
   switch state->Game.findCell(node) {
   | Inactive => <Cell background=Color.white />
   | Guessed(v) => <Cell background=Color.white> {v->React.string} </Cell>
+  | Incorrect(v) => <Cell background=Color.red> {v->React.string} </Cell>
   | PartialCorrect(v) => <Cell background=Color.yellow> {v->React.string} </Cell>
   | Correct(v) => <Cell background=Color.green> {v->React.string} </Cell>
   }

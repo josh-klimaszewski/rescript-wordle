@@ -19,6 +19,7 @@ let make = () => {
   Js.log(state.currentNode)
   KeyboardListener.use()
   <Wrapper>
+    <Row> {"w o r d l e"->React.string} </Row>
     {state.grid
     ->Js.Array2.mapi((row, x) =>
       <Row key={x->Js.Int.toString}>

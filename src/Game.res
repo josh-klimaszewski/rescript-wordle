@@ -3,6 +3,7 @@ type node = (int, int)
 type cell =
   | Inactive
   | Guessed(string)
+  | Incorrect(string)
   | PartialCorrect(string)
   | Correct(string)
 
@@ -48,7 +49,10 @@ let insertValueIntoGrid = (state, value) => {
           i !== y
             ? cell
             : switch value {
-              | Some(value) => Guessed(value)
+              | Some(value) =>
+                state.incorrectGuesses->Js.Array2.includes(value)
+                  ? Incorrect(value)
+                  : Guessed(value)
               | None => Inactive
               }
         })
@@ -66,7 +70,7 @@ let solveGrid = state => {
             switch value {
             | v if state.solution->Js.String2.charAt(i) == v => Correct(value)
             | v if state.solution->Js.String2.includes(v) => PartialCorrect(value)
-            | _ => cell
+            | _ => Incorrect(value)
             }
           | _ => cell
           }
@@ -95,6 +99,7 @@ let onLastCharacter = state => {
 let currentCharacterIsGuessed = state => {
   let (x, y) = state.currentNode
   switch state.grid[x][y] {
+  | Incorrect(_)
   | Guessed(_) => true
   | _ => false
   }
@@ -112,8 +117,8 @@ let findIncorrect = (state, grid) => {
   grid->Js.Array2.forEach(row => {
     row->Js.Array2.forEach(cell => {
       switch cell {
-      | Guessed(v) if incorrect.contents->Js.Array2.includes(v) => ()
-      | Guessed(v) => incorrect := incorrect.contents->Js.Array2.concat([v])
+      | Incorrect(v) if incorrect.contents->Js.Array2.includes(v) => ()
+      | Incorrect(v) => incorrect := incorrect.contents->Js.Array2.concat([v])
       | _ => ()
       }
     })
@@ -128,6 +133,7 @@ let buildGuess = state => {
   state.grid[x]
   ->Js.Array2.map(cell => {
     switch cell {
+    | Incorrect(v)
     | Guessed(v) => v
     | _ => ""
     }

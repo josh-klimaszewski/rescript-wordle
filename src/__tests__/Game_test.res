@@ -138,7 +138,13 @@ describe("reducer", () => {
       }->Game.reducer(Solve),
     )->toEqual({
       grid: [
-        [Guessed("c"), PartialCorrect("h"), PartialCorrect("o"), Guessed("r"), PartialCorrect("e")],
+        [
+          Incorrect("c"),
+          PartialCorrect("h"),
+          PartialCorrect("o"),
+          Incorrect("r"),
+          PartialCorrect("e"),
+        ],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
