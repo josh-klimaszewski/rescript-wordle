@@ -5,7 +5,6 @@ type cell =
   | Guessed(string)
   | PartialCorrect(string)
   | Correct(string)
-  | Incorrect(string)
 
 type row = array<cell>
 
@@ -17,9 +16,10 @@ type state = {
   currentNode: node,
   solution: string,
   gameState: gameState,
+  invalidGuess: option<string>,
   incorrectGuesses: array<string>,
 }
-type action = Guess(string) | Back | Solve | Invalid
+type action = Guess(string) | Back | Solve
 
 let nextNode = state => {
   let (x, y) = state.currentNode
@@ -28,15 +28,14 @@ let nextNode = state => {
   switch (x, y) {
   | (x, y) if y + 1 !== wordLength => (x, y + 1)
   | (x, y) if y + 1 === wordLength && x + 1 !== guessLength => (x + 1, 0)
-  | _ => (0, 0)
+  | (x, y) => (x, y)
   }
 }
 
 let lastNode = state => {
-  let (x, y) = state.currentNode
-  switch x {
-  | x if x === 0 => (0, y)
-  | _ => (x - 1, y)
+  switch state.currentNode {
+  | (_, 0) => state.currentNode
+  | (x, y) => (x, y - 1)
   }
 }
 
@@ -67,7 +66,7 @@ let solveGrid = state => {
             switch value {
             | v if state.solution->Js.String2.charAt(i) == v => Correct(value)
             | v if state.solution->Js.String2.includes(v) => PartialCorrect(value)
-            | _ => Incorrect(value)
+            | _ => cell
             }
           | _ => cell
           }
@@ -88,15 +87,33 @@ let completed = grid =>
   | _ => false
   }
 
-let isLastGuess = state => state->nextNode === (0, 0)
+let onLastCharacter = state => {
+  let (_, y) = state.currentNode
+  state.solution->Js.String2.length - 1 === y
+}
+
+let currentCharacterIsGuessed = state => {
+  let (x, y) = state.currentNode
+  switch state.grid[x][y] {
+  | Guessed(_) => true
+  | _ => false
+  }
+}
+
+let isLastGuess = state => {
+  switch state.currentNode {
+  | (x, _) if state.grid->Js.Array2.length - 1 === x => true
+  | _ => false
+  }
+}
 
 let findIncorrect = (state, grid) => {
   let incorrect = ref(state.incorrectGuesses)
   grid->Js.Array2.forEach(row => {
     row->Js.Array2.forEach(cell => {
       switch cell {
-      | Incorrect(v) if incorrect.contents->Js.Array2.includes(v) => ()
-      | Incorrect(v) => incorrect := incorrect.contents->Js.Array2.concat([v])
+      | Guessed(v) if incorrect.contents->Js.Array2.includes(v) => ()
+      | Guessed(v) => incorrect := incorrect.contents->Js.Array2.concat([v])
       | _ => ()
       }
     })
@@ -104,48 +121,93 @@ let findIncorrect = (state, grid) => {
   incorrect.contents
 }
 
+let findCell = (state, (x, y): node) => state.grid[x][y]
+
+let buildGuess = state => {
+  let (x, _) = state.currentNode
+  state.grid[x]
+  ->Js.Array2.map(cell => {
+    switch cell {
+    | Guessed(v) => v
+    | _ => ""
+    }
+  })
+  ->Js.Array2.joinWith("")
+}
+
+let validGuess = guess =>
+  Constants.valid->Js.Array2.concat(Constants.words)->Js.Array2.includes(guess)
+
 let reducer = (state, action) => {
-  switch action {
-  | Guess(value) => {
+  switch (state.gameState, state->onLastCharacter, action) {
+  | (Playing, _, Guess(value)) => {
       ...state,
-      currentNode: state->nextNode,
+      currentNode: state->onLastCharacter ? state.currentNode : state->nextNode,
       grid: state->insertValueIntoGrid(Some(value)),
+      invalidGuess: None,
     }
-  | Back => {
-      ...state,
-      currentNode: state->lastNode,
-      grid: state->insertValueIntoGrid(None),
+  | (Playing, _, Back) =>
+    switch state {
+    | state if state->onLastCharacter && state->currentCharacterIsGuessed => {
+        ...state,
+        invalidGuess: None,
+        grid: state->insertValueIntoGrid(None),
+      }
+    | _ => {
+        let lastNode = state->lastNode
+        {
+          ...state,
+          grid: {...state, currentNode: lastNode}->insertValueIntoGrid(None),
+          currentNode: lastNode,
+        }
+      }
     }
-  | Solve => {
-      let nextGrid = state->solveGrid
-      let completed = nextGrid->completed
-      {
+  | (Playing, true, Solve) =>
+    let nextGrid = state->solveGrid
+    switch (nextGrid->completed, state->isLastGuess) {
+    | (true, _) => {
         ...state,
         currentNode: state->nextNode,
         grid: nextGrid,
-        gameState: completed ? Won : state->isLastGuess ? Lost : Playing,
-        incorrectGuesses: state->findIncorrect(nextGrid),
+        gameState: Won,
+      }
+    | (false, true) => {
+        ...state,
+        grid: nextGrid,
+        gameState: Lost,
+      }
+    | (false, false) => {
+        let guess = state->buildGuess
+        switch guess->validGuess {
+        | true => {
+            ...state,
+            currentNode: state->nextNode,
+            grid: nextGrid,
+            incorrectGuesses: state->findIncorrect(nextGrid),
+          }
+        | false => {
+            ...state,
+            invalidGuess: Some(guess),
+          }
+        }
       }
     }
-  | Invalid => state
+  | _ => state
   }
 }
 
 let getInitial = solution => {
-  grid: [
-    [Inactive, Inactive, Inactive, Inactive, Inactive],
-    [Inactive, Inactive, Inactive, Inactive, Inactive],
-    [Inactive, Inactive, Inactive, Inactive, Inactive],
-    [Inactive, Inactive, Inactive, Inactive, Inactive],
-    [Inactive, Inactive, Inactive, Inactive, Inactive],
-  ],
+  grid: Belt.Array.make(6, Belt.Array.make(solution->Js.String2.length, Inactive)),
   currentNode: (0, 0),
   solution: solution,
   gameState: Playing,
+  invalidGuess: None,
   incorrectGuesses: [],
 }
 
-let words = ["hello", "ouphe", "chase"]
+let randomWord = words => {
+  words[0->Js.Math.random_int(words->Js.Array2.length)]
+}
 
 module GameContext = {
   include Context.Make({
@@ -157,10 +219,7 @@ module GameContext = {
 module Provider = {
   @react.component
   let make = (~children) => {
-    let (state, dispatch) = React.useReducer(
-      reducer,
-      words[0->Js.Math.random_int(words->Js.Array2.length)]->getInitial,
-    )
+    let (state, dispatch) = React.useReducer(reducer, Constants.words->randomWord->getInitial)
 
     <GameContext.Provider value=(state, dispatch)> children </GameContext.Provider>
   }

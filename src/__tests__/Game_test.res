@@ -13,6 +13,7 @@ let initial: Game.state = {
   currentNode: (0, 0),
   solution: "hello",
   gameState: Playing,
+  invalidGuess: None,
   incorrectGuesses: [],
 }
 
@@ -29,9 +30,9 @@ describe("nextNode", () => {
     let next = (0, 4)->generateInitial
     expect(next->Game.nextNode)->toEqual((1, 0))
   })
-  test("resets", () => {
+  test("ends at last node", () => {
     let next = (4, 4)->generateInitial
-    expect(next->Game.nextNode)->toEqual((0, 0))
+    expect(next->Game.nextNode)->toEqual((4, 4))
   })
 })
 
@@ -100,6 +101,7 @@ describe("reducer", () => {
         ],
         currentNode: (0, 4),
         solution: "hello",
+        invalidGuess: None,
         gameState: Playing,
         incorrectGuesses: [],
       }->Game.reducer(Solve),
@@ -113,6 +115,7 @@ describe("reducer", () => {
       ],
       currentNode: (1, 0),
       solution: "hello",
+      invalidGuess: None,
       gameState: Won,
       incorrectGuesses: [],
     })
@@ -130,17 +133,12 @@ describe("reducer", () => {
         currentNode: (0, 4),
         solution: "hello",
         gameState: Playing,
+        invalidGuess: None,
         incorrectGuesses: [],
       }->Game.reducer(Solve),
     )->toEqual({
       grid: [
-        [
-          Incorrect("c"),
-          PartialCorrect("h"),
-          PartialCorrect("o"),
-          Incorrect("r"),
-          PartialCorrect("e"),
-        ],
+        [Guessed("c"), PartialCorrect("h"), PartialCorrect("o"), Guessed("r"), PartialCorrect("e")],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
@@ -148,8 +146,40 @@ describe("reducer", () => {
       ],
       currentNode: (1, 0),
       solution: "hello",
+      invalidGuess: None,
       gameState: Playing,
       incorrectGuesses: ["c", "r"],
+    })
+  })
+  test("returns invalid guess", () => {
+    expect(
+      {
+        grid: [
+          [Guessed("b"), Guessed("o"), Guessed("o"), Guessed("o"), Guessed("o")],
+          [Inactive, Inactive, Inactive, Inactive, Inactive],
+          [Inactive, Inactive, Inactive, Inactive, Inactive],
+          [Inactive, Inactive, Inactive, Inactive, Inactive],
+          [Inactive, Inactive, Inactive, Inactive, Inactive],
+        ],
+        currentNode: (0, 4),
+        solution: "hello",
+        gameState: Playing,
+        invalidGuess: None,
+        incorrectGuesses: [],
+      }->Game.reducer(Solve),
+    )->toEqual({
+      grid: [
+        [Guessed("b"), Guessed("o"), Guessed("o"), Guessed("o"), Guessed("o")],
+        [Inactive, Inactive, Inactive, Inactive, Inactive],
+        [Inactive, Inactive, Inactive, Inactive, Inactive],
+        [Inactive, Inactive, Inactive, Inactive, Inactive],
+        [Inactive, Inactive, Inactive, Inactive, Inactive],
+      ],
+      currentNode: (0, 4),
+      solution: "hello",
+      invalidGuess: Some("boooo"),
+      gameState: Playing,
+      incorrectGuesses: [],
     })
   })
 })
