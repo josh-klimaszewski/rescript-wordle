@@ -1,5 +1,6 @@
 {
   "name": "rs-wordle",
+  "homepage": "https://josh-klimaszewski.github.io/rescript-wordle",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -29,7 +30,9 @@
     "postinstall": "rescript build",
     "start:re": "rescript build -w",
     "start:cra": "react-scripts start",
-    "prebuild": "rescript clean"
+    "prebuild": "rescript clean",
+    "predeploy": "react-scripts build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": null,
   "browserslist": {
@@ -50,6 +53,7 @@
   },
   "devDependencies": {
     "esbuild-jest": "^0.5.0",
+    "gh-pages": "^3.2.3",
     "rescript": "^9.1.4"
   },
   "jest": {
