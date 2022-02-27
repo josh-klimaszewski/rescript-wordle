@@ -1,22 +1,22 @@
 {
   "files": {
     "main.css": "/rescript-wordle/static/css/main.4218136d.chunk.css",
-    "main.js": "/rescript-wordle/static/js/main.cc3dfca0.chunk.js",
-    "main.js.map": "/rescript-wordle/static/js/main.cc3dfca0.chunk.js.map",
-    "runtime-main.js": "/rescript-wordle/static/js/runtime-main.57729bb8.js",
-    "runtime-main.js.map": "/rescript-wordle/static/js/runtime-main.57729bb8.js.map",
-    "static/js/2.5bbeb343.chunk.js": "/rescript-wordle/static/js/2.5bbeb343.chunk.js",
-    "static/js/2.5bbeb343.chunk.js.map": "/rescript-wordle/static/js/2.5bbeb343.chunk.js.map",
-    "static/js/3.995d7fa9.chunk.js": "/rescript-wordle/static/js/3.995d7fa9.chunk.js",
-    "static/js/3.995d7fa9.chunk.js.map": "/rescript-wordle/static/js/3.995d7fa9.chunk.js.map",
+    "main.js": "/rescript-wordle/static/js/main.74b6ea42.chunk.js",
+    "main.js.map": "/rescript-wordle/static/js/main.74b6ea42.chunk.js.map",
+    "runtime-main.js": "/rescript-wordle/static/js/runtime-main.a3a3d865.js",
+    "runtime-main.js.map": "/rescript-wordle/static/js/runtime-main.a3a3d865.js.map",
+    "static/js/2.c6fdca8b.chunk.js": "/rescript-wordle/static/js/2.c6fdca8b.chunk.js",
+    "static/js/2.c6fdca8b.chunk.js.map": "/rescript-wordle/static/js/2.c6fdca8b.chunk.js.map",
+    "static/js/3.7ffa64c0.chunk.js": "/rescript-wordle/static/js/3.7ffa64c0.chunk.js",
+    "static/js/3.7ffa64c0.chunk.js.map": "/rescript-wordle/static/js/3.7ffa64c0.chunk.js.map",
     "index.html": "/rescript-wordle/index.html",
     "static/css/main.4218136d.chunk.css.map": "/rescript-wordle/static/css/main.4218136d.chunk.css.map",
-    "static/js/2.5bbeb343.chunk.js.LICENSE.txt": "/rescript-wordle/static/js/2.5bbeb343.chunk.js.LICENSE.txt"
+    "static/js/2.c6fdca8b.chunk.js.LICENSE.txt": "/rescript-wordle/static/js/2.c6fdca8b.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.57729bb8.js",
-    "static/js/2.5bbeb343.chunk.js",
+    "static/js/runtime-main.a3a3d865.js",
+    "static/js/2.c6fdca8b.chunk.js",
     "static/css/main.4218136d.chunk.css",
-    "static/js/main.cc3dfca0.chunk.js"
+    "static/js/main.74b6ea42.chunk.js"
   ]
 }
