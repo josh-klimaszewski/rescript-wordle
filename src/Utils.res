@@ -133,8 +133,7 @@ let getInitial = solution => {
 }
 
 let randomWord = words => {
-  "bagel"
-  //   words[0->Js.Math.random_int(words->Js.Array2.length)]
+  words[0->Js.Math.random_int(words->Js.Array2.length)]
 }
 
 let handlingBackSpaceWhenReadyToSolve = state =>
