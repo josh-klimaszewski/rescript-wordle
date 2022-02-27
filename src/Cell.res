@@ -14,10 +14,10 @@ module Cell = %styled.div(
 )
 
 @react.component
-let make = (~node: Game.node) => {
+let make = (~node: Models.node) => {
   let (state, _dispatch) = Game.GameContext.use()
 
-  switch state->Game.findCell(node) {
+  switch state->Utils.findCell(node) {
   | Inactive => <Cell background=Color.white />
   | Guessed(v) => <Cell background=Color.white> {v->React.string} </Cell>
   | Incorrect(v) => <Cell background=Color.red> {v->React.string} </Cell>

@@ -1,8 +1,7 @@
 open Jest
 open Expect
-open Game
 
-let initial: Game.state = {
+let initial: Models.state = {
   grid: [
     [Inactive, Inactive, Inactive, Inactive, Inactive],
     [Inactive, Inactive, Inactive, Inactive, Inactive],
@@ -24,21 +23,21 @@ let generateInitial = node => {
 
 describe("nextNode", () => {
   test("finds the next guess in a line", () => {
-    expect(initial->Game.nextNode)->toEqual((0, 1))
+    expect(initial->Utils.nextNode)->toEqual((0, 1))
   })
   test("finds next line", () => {
     let next = (0, 4)->generateInitial
-    expect(next->Game.nextNode)->toEqual((1, 0))
+    expect(next->Utils.nextNode)->toEqual((1, 0))
   })
   test("ends at last node", () => {
     let next = (4, 4)->generateInitial
-    expect(next->Game.nextNode)->toEqual((4, 4))
+    expect(next->Utils.nextNode)->toEqual((4, 4))
   })
 })
 
 describe("insertValueIntoGrid", () => {
   test("inserts first value", () => {
-    expect(initial->Game.insertValueIntoGrid(Some("v")))->toEqual([
+    expect(initial->Utils.insertValueIntoGrid(Some("v")))->toEqual([
       [Guessed("v"), Inactive, Inactive, Inactive, Inactive],
       [Inactive, Inactive, Inactive, Inactive, Inactive],
       [Inactive, Inactive, Inactive, Inactive, Inactive],
@@ -58,7 +57,7 @@ describe("insertValueIntoGrid", () => {
         [Inactive, Inactive, Inactive, Inactive, Inactive],
       ],
     }
-    expect(next->Game.insertValueIntoGrid(Some("b")))->toEqual([
+    expect(next->Utils.insertValueIntoGrid(Some("b")))->toEqual([
       [Guessed("w"), Guessed("o"), Guessed("r"), Guessed("s"), Guessed("t")],
       [Guessed("b"), Inactive, Inactive, Inactive, Inactive],
       [Inactive, Inactive, Inactive, Inactive, Inactive],
@@ -78,7 +77,7 @@ describe("insertValueIntoGrid", () => {
         [Inactive, Inactive, Inactive, Inactive, Inactive],
       ],
     }
-    expect(next->Game.insertValueIntoGrid(None))->toEqual([
+    expect(next->Utils.insertValueIntoGrid(None))->toEqual([
       [Guessed("w"), Guessed("o"), Guessed("r"), Guessed("s"), Inactive],
       [Inactive, Inactive, Inactive, Inactive, Inactive],
       [Inactive, Inactive, Inactive, Inactive, Inactive],
@@ -113,7 +112,7 @@ describe("reducer", () => {
         [Inactive, Inactive, Inactive, Inactive, Inactive],
         [Inactive, Inactive, Inactive, Inactive, Inactive],
       ],
-      currentNode: (1, 0),
+      currentNode: (0, 4),
       solution: "hello",
       invalidGuess: None,
       gameState: Won,
