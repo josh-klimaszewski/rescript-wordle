@@ -16,7 +16,6 @@ module Row = %styled.div(`
 @react.component
 let make = () => {
   let (state, _dispatch) = Game.GameContext.use()
-  Js.log(state.currentNode)
   KeyboardListener.use()
   <Wrapper>
     <Row> {"w o r d l e"->React.string} </Row>
