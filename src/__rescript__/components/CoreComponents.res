@@ -13,6 +13,13 @@ module Row = %styled.div(`
    color: #F7EDE2;
   `)
 
+  module TextRow = %styled.div(`
+   display: flex;
+   justify-content: flex-start;
+   font-weight: bold;
+  `)
+  
+
 module Cell = %styled.div(
   (~background) =>
     `
@@ -33,12 +40,15 @@ module Modal = %styled.div(`
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 300px;
-    height: 600px;
+    width: 820px;
+    height: 820px;
     max-width: 100%;
     max-height: 100%;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     gap: 15px;
     background: white;
+    z-index: 10;
+    color: black;
   `)

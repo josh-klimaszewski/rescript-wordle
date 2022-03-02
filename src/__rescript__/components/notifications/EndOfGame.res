@@ -4,6 +4,6 @@ open CoreComponents
 let make = () => {
 
   <BaseModal>
-    <TextRow> {"How to play"->React.string} </TextRow>
+    <TextRow> {"End of game"->React.string} </TextRow>
   </BaseModal>
 }

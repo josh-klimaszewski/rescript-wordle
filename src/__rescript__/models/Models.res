@@ -21,4 +21,4 @@ type state = {
   invalidGuess: option<string>,
   incorrectGuesses: array<string>,
 }
-type action = Guess(string) | Back | Solve | CloseNotification
+type action = Guess(string) | Back | Next 

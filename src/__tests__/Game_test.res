@@ -103,7 +103,7 @@ describe("reducer", () => {
         invalidGuess: None,
         gameState: Playing,
         incorrectGuesses: [],
-      }->GameService.reducer(Solve),
+      }->GameService.reducer(Next),
     )->toEqual({
       grid: [
         [Correct("h"), Correct("e"), Correct("l"), Correct("l"), Correct("o")],
@@ -134,7 +134,7 @@ describe("reducer", () => {
         gameState: Playing,
         invalidGuess: None,
         incorrectGuesses: [],
-      }->GameService.reducer(Solve),
+      }->GameService.reducer(Next),
     )->toEqual({
       grid: [
         [
@@ -171,7 +171,7 @@ describe("reducer", () => {
         gameState: Playing,
         invalidGuess: None,
         incorrectGuesses: [],
-      }->GameService.reducer(Solve),
+      }->GameService.reducer(Next),
     )->toEqual({
       grid: [
         [Guessed("b"), Guessed("o"), Guessed("o"), Guessed("o"), Guessed("o")],

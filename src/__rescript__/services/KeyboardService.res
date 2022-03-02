@@ -19,13 +19,16 @@ let use = () => {
   let (_state, dispatch) = GameService.Context.use()
 
   let onKeyDown = event => {
-    let key = ReactEvent.Keyboard.key(event)->Js.String2.toLowerCase
-    let metaKey = ReactEvent.Keyboard.metaKey(event)
-    switch (metaKey, key) {
-    | (true, _) => ()
-    | (_, "enter") => dispatch(Solve)
-    | (_, "backspace") => dispatch(Back)
-    | (_, k) if k->isAlpha => dispatch(Guess(k))
+    let key = event->ReactEvent.Keyboard.key->Js.String2.toLowerCase
+    let metaKey = event->ReactEvent.Keyboard.metaKey
+    let ctrlKey = event->ReactEvent.Keyboard.ctrlKey
+
+    switch (metaKey, ctrlKey, key) {
+    | (true, _, _)
+    | (_, true, _) => ()
+    | (_, _, "enter") => dispatch(Next)
+    | (_, _, "backspace") => dispatch(Back)
+    | (_, _, k) if k->isAlpha => dispatch(Guess(k))
     | _ => ()
     }
   }

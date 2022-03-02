@@ -127,7 +127,7 @@ let getInitial = solution => {
   grid: Belt.Array.make(6, Belt.Array.make(solution->Js.String2.length, Inactive)),
   currentNode: (0, 0),
   solution: solution,
-  gameState: Playing,
+  gameState: Initial,
   invalidGuess: None,
   incorrectGuesses: [],
 }

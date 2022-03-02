@@ -2,12 +2,6 @@ open Models
 
 let reducer = (state, action) => {
   switch (action, state.gameState) {
-  // | (CloseNotification, Initial) => {
-  //     ...state,
-  //     gameState: Playing,
-  //   }
-  // | (_, Initial) => state
-
   | (Guess(value), Playing) => {
       ...state,
       currentNode: state->Utils.readyToSolve ? state.currentNode : state->Utils.nextNode,
@@ -30,30 +24,43 @@ let reducer = (state, action) => {
       }
     }
 
-  | (Solve, Playing) if state->Utils.handlingInvalidSolve => {
+  | (Next, Playing) if state->Utils.handlingInvalidSolve => {
       ...state,
       invalidGuess: Some(state->Utils.buildGuess),
     }
 
-  | (Solve, Playing) if state->Utils.handlingWinningSolve => {
+  | (Next, Playing) if state->Utils.handlingWinningSolve => {
       ...state,
       gameState: Won,
       grid: state->Utils.solveGrid,
     }
 
-  | (Solve, Playing) if state->Utils.handlingLosingSolve => {
+  | (Next, Playing) if state->Utils.handlingLosingSolve => {
       ...state,
       gameState: Lost,
       grid: state->Utils.solveGrid,
     }
 
-  | (Solve, Playing) if state->Utils.readyToSolve => {
+  | (Next, Playing) if state->Utils.readyToSolve => {
       let nextGrid = state->Utils.solveGrid
       {
         ...state,
         currentNode: state->Utils.nextNode,
         grid: nextGrid,
         incorrectGuesses: state->Utils.findIncorrect(nextGrid),
+      }
+    }
+
+  | (Next, Initial) => {
+      ...state,
+      gameState: Playing,
+    }
+
+  | (Next, Lost) => {
+      let nextGame = Constants.words->Utils.randomWord->Utils.getInitial
+      {
+        ...nextGame,
+        gameState: Playing,
       }
     }
   | _ => state
