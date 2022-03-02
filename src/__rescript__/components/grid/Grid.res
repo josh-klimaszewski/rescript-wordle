@@ -2,7 +2,7 @@ open CoreComponents
 
 @react.component
 let make = () => {
-  let (state, _dispatch) = Service.Context.use()
+  let (state, _dispatch) = GameService.Context.use()
 
   state.grid
   ->Js.Array2.mapi((row, x) =>

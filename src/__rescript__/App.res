@@ -10,9 +10,9 @@ module Background = %styled.div(`
 
 @react.component
 let make = () => {
-  <Service.Provider>
+  <GameService.Provider>
     <Background>
       <Notifications /> <Wrapper> <Header /> <Grid /> <Keyboard /> <Messages /> </Wrapper>
     </Background>
-  </Service.Provider>
+  </GameService.Provider>
 }

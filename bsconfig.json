@@ -3,9 +3,11 @@
   "reason": {
     "react-jsx": 3
   },
+  "refmt": 3,
   "sources": [
     {
-      "dir": "src"
+      "dir": "src/__rescript__",
+      "subdirs": true
     },
     {
       "dir": "src/__tests__",

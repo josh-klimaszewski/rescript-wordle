@@ -2,8 +2,8 @@ open CoreComponents
 
 @react.component
 let make = () => {
-  let (state, _dispatch) = Service.Context.use()
-  KeyboardListener.use()
+  let (state, _dispatch) = GameService.Context.use()
+  KeyboardService.use()
 
   <Row>
     {state.incorrectGuesses

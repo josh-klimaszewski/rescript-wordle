@@ -16,7 +16,7 @@ let isAlpha = key =>
   }
 
 let use = () => {
-  let (_state, dispatch) = Service.Context.use()
+  let (_state, dispatch) = GameService.Context.use()
 
   let onKeyDown = event => {
     let key = ReactEvent.Keyboard.key(event)->Js.String2.toLowerCase

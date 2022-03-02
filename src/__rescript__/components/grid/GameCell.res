@@ -2,7 +2,7 @@ open CoreComponents
 
 @react.component
 let make = (~node: Models.node) => {
-  let (state, _dispatch) = Service.Context.use()
+  let (state, _dispatch) = GameService.Context.use()
 
   switch state->Utils.findCell(node) {
   | Inactive => <Cell background=Constants.Color.white />
