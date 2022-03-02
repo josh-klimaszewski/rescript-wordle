@@ -1,4 +1,9 @@
-@val external document: 'a = "document"
+type document = {
+  addEventListener: (string, ReactEvent.Keyboard.t => unit) => unit,
+  removeEventListener: (string, ReactEvent.Keyboard.t => unit) => unit,
+}
+
+@val external document: document = "document"
 
 let isAlpha = key =>
   switch (key, key->Js.String2.length) {
@@ -11,7 +16,8 @@ let isAlpha = key =>
   }
 
 let use = () => {
-  let (_state, dispatch) = Game.GameContext.use()
+  let (_state, dispatch) = Service.Context.use()
+
   let onKeyDown = event => {
     let key = ReactEvent.Keyboard.key(event)->Js.String2.toLowerCase
     let metaKey = ReactEvent.Keyboard.metaKey(event)
@@ -23,11 +29,12 @@ let use = () => {
     | _ => ()
     }
   }
+
   React.useEffect0(() => {
-    document["addEventListener"]("keydown", onKeyDown)
+    document.addEventListener("keydown", onKeyDown)
     Some(
       () => {
-        document["removeEventListener"]("keydown", onKeyDown)
+        document.removeEventListener("keydown", onKeyDown)
       },
     )
   })

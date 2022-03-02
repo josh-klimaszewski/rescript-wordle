@@ -11,7 +11,7 @@ type row = array<cell>
 
 type grid = array<row>
 
-type gameState = Playing | Won | Lost
+type gameState = Initial | Playing | Won | Lost
 
 type state = {
   grid: grid,
@@ -21,4 +21,4 @@ type state = {
   invalidGuess: option<string>,
   incorrectGuesses: array<string>,
 }
-type action = Guess(string) | Back | Solve
+type action = Guess(string) | Back | Solve | CloseNotification

@@ -1,3 +1,5 @@
+open CoreComponents
+
 module Background = %styled.div(`
   text-align: center;
   background-color: #282c34;
@@ -8,5 +10,9 @@ module Background = %styled.div(`
 
 @react.component
 let make = () => {
-  <Game.Provider> <Background> <Board /> </Background> </Game.Provider>
+  <Service.Provider>
+    <Background>
+      <Notifications /> <Wrapper> <Header /> <Grid /> <Keyboard /> <Messages /> </Wrapper>
+    </Background>
+  </Service.Provider>
 }

@@ -2,6 +2,12 @@ open Models
 
 let reducer = (state, action) => {
   switch (action, state.gameState) {
+  // | (CloseNotification, Initial) => {
+  //     ...state,
+  //     gameState: Playing,
+  //   }
+  // | (_, Initial) => state
+
   | (Guess(value), Playing) => {
       ...state,
       currentNode: state->Utils.readyToSolve ? state.currentNode : state->Utils.nextNode,
@@ -54,8 +60,8 @@ let reducer = (state, action) => {
   }
 }
 
-module GameContext = {
-  include Context.Make({
+module Context = {
+  include ReactContext.Make({
     type context = (state, action => unit)
     let defaultValue = (Utils.getInitial(""), _ => ())
   })
@@ -69,6 +75,6 @@ module Provider = {
       Constants.words->Utils.randomWord->Utils.getInitial,
     )
 
-    <GameContext.Provider value=(state, dispatch)> children </GameContext.Provider>
+    <Context.Provider value=(state, dispatch)> children </Context.Provider>
   }
 }

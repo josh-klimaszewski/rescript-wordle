@@ -33,6 +33,5 @@
   "bs-dev-dependencies": [
     "@glennsl/rescript-jest",
     "bs-react-testing-library"
-  ],
-  "refmt": 3
+  ]
 }
