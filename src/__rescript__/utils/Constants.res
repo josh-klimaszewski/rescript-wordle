@@ -5,6 +5,13 @@ module Color = {
   let green = #hex("84A59D")
   let red = #hex("f5cac3")
 }
+
+let keyboardKeys = [
+  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+  ["a", "s", "d", "f", "g", "h", "j", "k", "l", "backspace"],
+  ["z", "x", "c", "v", "b", "n", "m", "enter"],
+]
+
 let words = [
   "cigar",
   "rebut",
