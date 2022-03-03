@@ -45,7 +45,7 @@ module Modal = %styled.div(
     height: 820px;
     max-width: 100%;
     max-height: 100%;
-    overflow: scroll;
+    overflow: auto;
     padding: 15px;
     display: flex;
     flex-direction: column;
