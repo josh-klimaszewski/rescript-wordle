@@ -9,24 +9,26 @@ module Row = %styled.div(`
    display: flex;
    justify-content: center;
    gap: 15px;
-   font-weight: bold;
-   color: #F7EDE2;
   `)
 
-  module TextRow = %styled.div(`
+module TextRow = %styled.div(`
    display: flex;
    justify-content: flex-start;
-   font-weight: bold;
+   gap: 15px;
   `)
-  
+
+module Text = %styled.p(`
+    color: #F7EDE2;
+    font-weight: bold;
+  `)
 
 module Cell = %styled.div(
   (~background) =>
     `
+    font-weight: bold;
     width: 58px;
     height: 58px;
     background: $(background);
-    border-radius: 10%;
     border: 2px solid black;
     display: flex;
     justify-content: center;
@@ -51,4 +53,14 @@ module Modal = %styled.div(`
     background: white;
     z-index: 10;
     color: black;
+  `)
+
+module Bold = %styled.span(`
+    font-weight: bold;
+  `)
+
+module Divider = %styled.div(`
+    height: 1px;
+    width: 100%;
+    background: lightgrey
   `)

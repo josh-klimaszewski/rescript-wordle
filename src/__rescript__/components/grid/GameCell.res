@@ -1,10 +1,8 @@
 open CoreComponents
 
 @react.component
-let make = (~node: Models.node) => {
-  let (state, _dispatch) = GameService.Context.use()
-
-  switch state->Utils.findCell(node) {
+let make = (~cell: Models.cell) => {
+  switch cell {
   | Inactive => <Cell background=Constants.Color.white />
   | Guessed(v) => <Cell background=Constants.Color.white> {v->React.string} </Cell>
   | Incorrect(v) => <Cell background=Constants.Color.red> {v->React.string} </Cell>
