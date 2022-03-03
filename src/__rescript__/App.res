@@ -1,16 +1,19 @@
 open CoreComponents
 
-module Background = %styled.div(`
-  background-color: #282c34;
+module Background = %styled.div(
+  (~bg) =>
+    `
+  background-color: $(bg);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  `)
+  `
+)
 
 @react.component
 let make = () => {
   <GameService.Provider>
-    <Background>
+    <Background bg=Constants.Color.white>
       <Notifications /> <Wrapper> <Header /> <Grid /> <Keyboard /> <Messages /> </Wrapper>
     </Background>
   </GameService.Provider>

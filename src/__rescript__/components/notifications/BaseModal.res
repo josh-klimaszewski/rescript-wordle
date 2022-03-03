@@ -23,12 +23,11 @@ module Button = %styled.div(`
 let make = (~children) => {
   let (_state, dispatch) = GameService.Context.use()
 
-  <Modal>
+  let onClick = _e => dispatch(Next)
+
+  <Modal bg=Constants.Color.white>
     <TextWrapper>
-      <ButtonWrapper>
-        <Button onClick={_e => dispatch(Next)}> {"X"->React.string} </Button>
-      </ButtonWrapper>
-      children
+      <ButtonWrapper onClick> <Button> {"x"->React.string} </Button> </ButtonWrapper> children
     </TextWrapper>
   </Modal>
 }
