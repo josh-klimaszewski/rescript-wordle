@@ -24,12 +24,33 @@ module EnterKey = %styled.div(`
     gap: 2px;
   `)
 
+let getCompletedKeys = grid => {
+  let keys = ref([])
+  grid->Js.Array2.forEach(row => {
+    row->Js.Array2.forEach(cell => {
+      switch cell {
+      | Correct(v) =>
+        switch keys {
+        | keys if keys.contents->Js.Array2.includes(v) => ()
+        | _ => keys := keys.contents->Js.Array2.concat([v])
+        }
+      | _ => ()
+      }
+    })
+  })
+  keys.contents
+}
+
 @react.component
 let make = (~v: string) => {
   let (state, dispatch) = GameService.Context.use()
 
-  let bg = switch state.incorrectGuesses->Js.Array2.find(g => g == v) {
-  | Some(_) => Constants.Color.red
+  let bg = switch (
+    state.incorrectGuesses->Js.Array2.find(g => g == v),
+    state.grid->getCompletedKeys->Js.Array2.find(g => g == v),
+  ) {
+  | (Some(_), _) => Constants.Color.red
+  | (_, Some(_)) => Constants.Color.green
   | _ => Constants.Color.white
   }
 
