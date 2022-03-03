@@ -24,8 +24,8 @@ module Cell = %styled.div(
   (~background) =>
     `
     font-weight: bold;
-    width: 58px;
-    height: 58px;
+    width: 61px;
+    height: 61px;
     background: $(background);
     border: 2px solid black;
     display: flex;
@@ -41,10 +41,9 @@ module Modal = %styled.div(
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 820px;
-    height: 820px;
+    width: 800px;
     max-width: 100%;
-    max-height: 100%;
+    height: 100%;
     overflow: auto;
     padding: 15px;
     display: flex;

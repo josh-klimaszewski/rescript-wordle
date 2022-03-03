@@ -8,9 +8,8 @@ module Key = %styled.div(
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30px;
-    height: 60px;
-    gap: 25px;
+    width: 26px;
+    height: 36px;
   `
 )
 
@@ -19,9 +18,8 @@ module EnterKey = %styled.div(`
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 108px;
-    height: 60px;
-    gap: 2px;
+    width: 96px;
+    height: 36px;
   `)
 
 let getCompletedKeys = grid => {
