@@ -7,6 +7,7 @@ module Wrapper = %styled.div(`
 module Row = %styled.div(`
    display: flex;
    justify-content: center;
+   align-items: center;
    gap: 5px;
   `)
 
@@ -14,10 +15,6 @@ module TextRow = %styled.div(`
    display: flex;
    justify-content: flex-start;
    gap: 15px;
-  `)
-
-module Text = %styled.p(`
-    font-weight: bold;
   `)
 
 module Cell = %styled.div(

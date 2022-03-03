@@ -2,8 +2,7 @@ open CoreComponents
 
 @react.component
 let make = () => {
-  <BaseModal>
-    <Row> <p> <Bold> {"How to play"->React.string} </Bold> </p> </Row>
+  <BaseModal title="How to play">
     <TextRow>
       <p>
         {"Guess the "->React.string}

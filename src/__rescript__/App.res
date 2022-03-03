@@ -14,7 +14,7 @@ module Background = %styled.div(
 let make = () => {
   <GameService.Provider>
     <Background bg=Constants.Color.white>
-      <Notifications /> <Wrapper> <Header /> <Grid /> <Keyboard /> <Messages /> </Wrapper>
+      <Notifications /> <Wrapper> <Header /> <Grid /> <Messages /> <Keyboard /> </Wrapper>
     </Background>
   </GameService.Provider>
 }

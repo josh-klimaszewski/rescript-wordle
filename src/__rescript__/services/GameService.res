@@ -63,6 +63,11 @@ let reducer = (state, action) => {
         gameState: Playing,
       }
     }
+
+  | (SeeInitial, Playing) => {
+      ...state,
+      gameState: Initial,
+    }
   | _ => state
   }
 }

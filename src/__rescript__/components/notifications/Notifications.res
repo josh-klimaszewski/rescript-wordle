@@ -4,7 +4,6 @@ let make = () => {
 
   switch state.gameState {
   | Initial => <HowToPlay />
-  | Lost => <EndOfGame />
   | _ => React.null
   }
 }
