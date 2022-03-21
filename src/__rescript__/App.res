@@ -4,7 +4,6 @@ module Background = %styled.div(
   (~bg) =>
     `
   background-color: $(bg);
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
   `
@@ -13,8 +12,10 @@ module Background = %styled.div(
 @react.component
 let make = () => {
   <GameService.Provider>
-    <Background bg=Constants.Color.white>
-      <Notifications /> <Wrapper> <Header /> <Grid /> <Messages /> <Keyboard /> </Wrapper>
-    </Background>
+    <content className="min-h-screen">
+      <Background bg=Constants.Color.white>
+        <Notifications /> <Wrapper> <Header /> <Grid /> <Messages /> <Keyboard /> </Wrapper>
+      </Background>
+    </content>
   </GameService.Provider>
 }
