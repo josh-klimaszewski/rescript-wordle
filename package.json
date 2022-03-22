@@ -30,7 +30,7 @@
     "postinstall": "rescript build",
     "start:re": "rescript build -w",
     "start:cra": "react-scripts start",
-    "prebuild": "rescript clean",
+    "prebuild": "rescript build",
     "predeploy": "react-scripts build",
     "deploy": "gh-pages -d build"
   },
