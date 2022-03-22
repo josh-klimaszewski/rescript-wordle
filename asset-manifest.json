@@ -1,22 +1,20 @@
 {
   "files": {
     "main.css": "/rescript-wordle/static/css/main.4218136d.chunk.css",
-    "main.js": "/rescript-wordle/static/js/main.8d6da094.chunk.js",
-    "main.js.map": "/rescript-wordle/static/js/main.8d6da094.chunk.js.map",
-    "runtime-main.js": "/rescript-wordle/static/js/runtime-main.a3a3d865.js",
-    "runtime-main.js.map": "/rescript-wordle/static/js/runtime-main.a3a3d865.js.map",
+    "main.js": "/rescript-wordle/static/js/main.4906cc66.chunk.js",
+    "main.js.map": "/rescript-wordle/static/js/main.4906cc66.chunk.js.map",
+    "runtime-main.js": "/rescript-wordle/static/js/runtime-main.f66efd3d.js",
+    "runtime-main.js.map": "/rescript-wordle/static/js/runtime-main.f66efd3d.js.map",
     "static/js/2.dbebd894.chunk.js": "/rescript-wordle/static/js/2.dbebd894.chunk.js",
     "static/js/2.dbebd894.chunk.js.map": "/rescript-wordle/static/js/2.dbebd894.chunk.js.map",
-    "static/js/3.7ffa64c0.chunk.js": "/rescript-wordle/static/js/3.7ffa64c0.chunk.js",
-    "static/js/3.7ffa64c0.chunk.js.map": "/rescript-wordle/static/js/3.7ffa64c0.chunk.js.map",
     "index.html": "/rescript-wordle/index.html",
     "static/css/main.4218136d.chunk.css.map": "/rescript-wordle/static/css/main.4218136d.chunk.css.map",
     "static/js/2.dbebd894.chunk.js.LICENSE.txt": "/rescript-wordle/static/js/2.dbebd894.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.a3a3d865.js",
+    "static/js/runtime-main.f66efd3d.js",
     "static/js/2.dbebd894.chunk.js",
     "static/css/main.4218136d.chunk.css",
-    "static/js/main.8d6da094.chunk.js"
+    "static/js/main.4906cc66.chunk.js"
   ]
 }
